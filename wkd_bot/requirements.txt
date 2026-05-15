@@ -1,0 +1,9 @@
+# WKD Discord Bot — Dépendances Python
+# Installer avec : pip install -r requirements.txt
+
+discord.py==2.3.2
+asyncpg==0.29.0
+psycopg2-binary==2.9.9
+python-dotenv==1.0.0
+google-cloud-storage==2.10.0
+psutil==5.9.6

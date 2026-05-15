@@ -1,0 +1,50 @@
+# /etc/systemd/system/wkd-bot.service
+# Déploiement sur Raspberry Pi 5 — Service systemd
+#
+# Installation :
+#   sudo cp wkd-bot.service /etc/systemd/system/
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable wkd-bot
+#   sudo systemctl start wkd-bot
+#
+# Commandes utiles :
+#   sudo systemctl status wkd-bot
+#   sudo systemctl restart wkd-bot
+#   sudo journalctl -u wkd-bot -f
+
+[Unit]
+Description=WKD Discord Economy Bot
+After=network-online.target postgresql.service
+Wants=network-online.target postgresql.service
+
+[Service]
+Type=simple
+User=wkd
+Group=wkd
+WorkingDirectory=/home/wkd/wkd_bot
+
+# Chemin vers Python virtuel (recommandé)
+ExecStart=/home/wkd/venv/bin/python main.py
+
+# Redémarrage automatique en cas de crash
+Restart=always
+RestartSec=10
+StartLimitIntervalSec=60
+StartLimitBurst=3
+
+# Variables d'environnement (le .env est chargé par python-dotenv)
+EnvironmentFile=/home/wkd/wkd_bot/.env
+
+# Sécurité système
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ReadWritePaths=/home/wkd/wkd_bot/logs /home/wkd/backups
+
+# Logs
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=wkd-bot
+
+[Install]
+WantedBy=multi-user.target
